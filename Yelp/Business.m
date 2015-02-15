@@ -22,7 +22,12 @@
         
         self.name = dictionary[@"name"];
         self.imageUrl = dictionary[@"image_url"];
-        NSString *street = [dictionary valueForKeyPath:@"location.address"][0];
+        
+        NSArray *address = [dictionary valueForKeyPath:@"location.address"];
+        NSString *street = @"";
+        if (address.count > 0) {
+            street = [dictionary valueForKeyPath:@"location.address"][0];
+        }
         NSString *neighborhood = [dictionary valueForKeyPath:@"location.neighborhoods"][0];
         self.address = [NSString stringWithFormat:@"%@, %@", street, neighborhood];
         self.numReviews = [dictionary[@"review_count"] integerValue];

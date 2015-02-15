@@ -15,6 +15,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) NSArray *categories;
 @property (nonatomic, strong) NSMutableSet *selectedCategories;
+@property (nonatomic, assign) BOOL offeringDeal;
 
 - (void) initCategories;
 
@@ -28,6 +29,7 @@
     if (self) {
         self.selectedCategories = [NSMutableSet set];
         [self initCategories];
+        self.offeringDeal = NO;
     }
     return self;
 }
@@ -52,24 +54,76 @@
 #pragma mark - Table view methods
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.categories.count;
+    NSInteger rowsInSection = 0;
+    switch (section) {
+        case 0:
+            rowsInSection = 1;
+            break;
+        case 1:
+            rowsInSection = self.categories.count;
+            break;
+        default:
+            break;
+    }
+    return rowsInSection;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    NSString *sectionName = @"";
+    switch (section) {
+        case 0:
+            sectionName = @"Deals";
+            break;
+        case 1:
+            sectionName = @"Categories";
+        default:
+            break;
+    }
+    return sectionName;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     SwitchCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SwitchCell" forIndexPath:indexPath];
-    cell.titleLabel.text = self.categories[indexPath.row][@"name"];
-    cell.on = [self.selectedCategories containsObject:self.categories[indexPath.row]];
-    cell.delegate = self;
+
+    switch (indexPath.section) {
+        case 0:
+            cell.titleLabel.text = @"Offering a Deal";
+            cell.on = self.offeringDeal;
+            cell.delegate = self;
+            return cell;
+        case 1:
+            cell.titleLabel.text = self.categories[indexPath.row][@"name"];
+            cell.on = [self.selectedCategories containsObject:self.categories[indexPath.row]];
+            cell.delegate = self;
+            return cell;
+        default:
+            break;
+    }
     return cell;
 }
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 2;
+}
+
+
 
 #pragma mark Switch cell delegate methods
 - (void)switchCell:(SwitchCell *)cell didUpdateValue:(BOOL)value {
     NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-    if (value) {
-        [self.selectedCategories addObject:self.categories[indexPath.row]];
-    } else {
-        [self.selectedCategories removeObject:self.categories[indexPath.row]];
+    switch (indexPath.section) {
+        case 0:
+            self.offeringDeal = value;
+            break;
+        case 1:
+            if (value) {
+                [self.selectedCategories addObject:self.categories[indexPath.row]];
+            } else {
+                [self.selectedCategories removeObject:self.categories[indexPath.row]];
+            }
+            break;
+        default:
+            break;
     }
 }
 
@@ -85,6 +139,7 @@
         }
         NSString *categoryFilter = [names componentsJoinedByString:@","];
         [filters setObject:categoryFilter forKey:@"category_filter"];
+        [filters setObject:@(self.offeringDeal) forKey:@"deals_filter"];
     }
     return filters;
 }
