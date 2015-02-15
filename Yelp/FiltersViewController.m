@@ -9,15 +9,19 @@
 #import "FiltersViewController.h"
 #import "SwitchCell.h"
 
-@interface FiltersViewController () <UITableViewDataSource, UITableViewDelegate, SwitchCellDelegate>
+@interface FiltersViewController () <UITableViewDataSource, UITableViewDelegate, SwitchCellDelegate, UISearchBarDelegate>
 
 @property (nonatomic, readonly) NSDictionary *filters;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) NSArray *categories;
 @property (nonatomic, strong) NSMutableSet *selectedCategories;
 @property (nonatomic, assign) BOOL offeringDeal;
-@property (nonatomic, strong) NSIndexPath *activeDistanceCellIndexPath;
+
 @property (nonatomic, strong) NSArray *distances;
+@property (nonatomic, strong) NSIndexPath *activeDistanceCellIndexPath;
+
+@property (nonatomic, strong) NSArray *sortOptions;
+@property (nonatomic, strong) NSIndexPath *activeSortOptionIndexPath;
 
 - (void) initCategories;
 
@@ -32,7 +36,9 @@
         self.selectedCategories = [NSMutableSet set];
         [self initCategories];
         [self initDistances];
+        [self initSortOptions];
         self.activeDistanceCellIndexPath = [NSIndexPath indexPathForRow:0 inSection:1];
+        self.activeSortOptionIndexPath = [NSIndexPath indexPathForRow:0 inSection:2];
         self.offeringDeal = NO;
     }
     return self;
@@ -66,9 +72,13 @@
             break;
         case 1:
             // distance
-            rowsInSection = 5;
+            rowsInSection = self.distances.count;
             break;
         case 2:
+            // sort option
+            rowsInSection = self.sortOptions.count;
+            break;
+        case 3:
             // categories
             rowsInSection = self.categories.count;
             break;
@@ -88,6 +98,9 @@
             sectionName = @"Distance";
             break;
         case 2:
+            sectionName = @"Sort by";
+            break;
+        case 3:
             sectionName = @"Categories";
         default:
             break;
@@ -113,6 +126,15 @@
             cell.delegate = self;
             return cell;
         case 2:
+            cell.titleLabel.text = self.sortOptions[indexPath.row][@"name"];
+            if (indexPath == self.activeSortOptionIndexPath) {
+                cell.on = YES;
+            } else {
+                cell.on = NO;
+            }
+            cell.delegate = self;
+            return cell;
+        case 3:
             cell.titleLabel.text = self.categories[indexPath.row][@"name"];
             cell.on = [self.selectedCategories containsObject:self.categories[indexPath.row]];
             cell.delegate = self;
@@ -124,7 +146,7 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 3;
+    return 4;
 }
 
 
@@ -137,13 +159,20 @@
             self.offeringDeal = value;
             break;
         case 1:
-            if (value) {
+            if (value && indexPath != self.activeDistanceCellIndexPath) {
                 SwitchCell *oldActiveCell = (SwitchCell *)[self.tableView cellForRowAtIndexPath:self.activeDistanceCellIndexPath];
                 [oldActiveCell setOn:NO];
                 self.activeDistanceCellIndexPath = indexPath;
             }
             break;
         case 2:
+            if (value && indexPath != self.activeSortOptionIndexPath) {
+                SwitchCell *oldActiveCell = (SwitchCell *)[self.tableView cellForRowAtIndexPath:self.activeSortOptionIndexPath];
+                [oldActiveCell setOn:NO];
+                self.activeSortOptionIndexPath = indexPath;
+            }
+            break;
+        case 3:
             if (value) {
                 [self.selectedCategories addObject:self.categories[indexPath.row]];
             } else {
@@ -167,11 +196,12 @@
         }
         NSString *categoryFilter = [names componentsJoinedByString:@","];
         [filters setObject:categoryFilter forKey:@"category_filter"];
-        [filters setObject:@(self.offeringDeal) forKey:@"deals_filter"];
-        if (self.activeDistanceCellIndexPath.row > 0) {
-            // row is not set to 'Best Match' default, so add meters param
-            [filters setObject:self.distances[self.activeDistanceCellIndexPath.row][@"meters"] forKey:@"radius_filter"];
-        }
+    }
+    [filters setObject:@(self.offeringDeal) forKey:@"deals_filter"];
+    [filters setObject:self.sortOptions[self.activeSortOptionIndexPath.row][@"code"] forKey:@"sort"];
+    if (self.activeDistanceCellIndexPath.row > 0) {
+        // row is not set to 'Best Match' default, so add meters param
+        [filters setObject:self.distances[self.activeDistanceCellIndexPath.row][@"meters"] forKey:@"radius_filter"];
     }
     return filters;
 }
@@ -183,6 +213,14 @@
 - (void)onApplyButton {
     [self.delegate filtersViewController:self didChangeFilters:self.filters];
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)initSortOptions {
+    self.sortOptions =
+    @[@{@"name" : @"Best Match", @"code": @(0) },
+      @{@"name" : @"Distance", @"code": @(1) },
+      @{@"name" : @"Highest Rated", @"code": @(2) }
+    ];
 }
 
 - (void)initDistances {

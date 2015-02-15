@@ -53,6 +53,8 @@ NSString * const kYelpTokenSecret = @"mqtKIxMIR4iBtBPZCmCLEb-Dz3Y";
     
     self.title = @"Yelp";
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Filter" style:UIBarButtonItemStylePlain target:self action:@selector(onFilterButton)];
+    self.navigationItem.titleView = [[UISearchBar alloc] init];
+
 }
 
 - (void)viewDidAppear:(BOOL)animated {
