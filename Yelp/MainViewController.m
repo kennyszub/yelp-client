@@ -17,11 +17,15 @@ NSString * const kYelpConsumerSecret = @"33QCvh5bIF5jIHR5klQr7RtBDhQ";
 NSString * const kYelpToken = @"uRcRswHFYa1VkDrGV6LAW2F8clGh5JHV";
 NSString * const kYelpTokenSecret = @"mqtKIxMIR4iBtBPZCmCLEb-Dz3Y";
 
-@interface MainViewController () <UITableViewDataSource, UITableViewDelegate, FiltersViewControllerDelegate>
+@interface MainViewController () <UITableViewDataSource, UITableViewDelegate, FiltersViewControllerDelegate, UISearchBarDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) YelpClient *client;
 @property (nonatomic, strong) NSArray *businesses;
+@property (weak, nonatomic) UISearchBar *searchBar;
+@property (strong, nonatomic) UIGestureRecognizer *screenTapRecognizer;
+@property (strong, nonatomic) NSString *searchTerm;
+
 - (void)fetchBusinessesWithQuery:(NSString *)query params:(NSDictionary *)params;
 
 @end
@@ -53,8 +57,15 @@ NSString * const kYelpTokenSecret = @"mqtKIxMIR4iBtBPZCmCLEb-Dz3Y";
     
     self.title = @"Yelp";
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Filter" style:UIBarButtonItemStylePlain target:self action:@selector(onFilterButton)];
-    self.navigationItem.titleView = [[UISearchBar alloc] init];
-
+    self.searchTerm = @"Restaurants";
+    
+    // add search bar
+    UISearchBar *searchBar = [[UISearchBar alloc] init];
+    self.searchBar = searchBar;
+    self.navigationItem.titleView = self.searchBar;
+    self.searchBar.delegate = self;
+    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
+    self.screenTapRecognizer = gestureRecognizer;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -65,6 +76,32 @@ NSString * const kYelpTokenSecret = @"mqtKIxMIR4iBtBPZCmCLEb-Dz3Y";
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Search methods
+-(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+    self.searchTerm = searchBar.text;
+    [self hideKeyboard];
+    [self fetchBusinessesWithQuery:self.searchTerm params:nil];
+}
+
+-(void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
+    [self.tableView addGestureRecognizer:self.screenTapRecognizer];
+    self.searchBar.showsCancelButton = YES;
+}
+
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
+    [self.tableView removeGestureRecognizer:self.screenTapRecognizer];
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+    [self hideKeyboard];
+    [self.tableView removeGestureRecognizer:self.screenTapRecognizer];
+}
+
+-(void)hideKeyboard {
+    self.searchBar.showsCancelButton = NO;
+    [self.navigationItem.titleView endEditing:YES];
 }
 
 #pragma mark - Table view methods
@@ -87,7 +124,7 @@ NSString * const kYelpTokenSecret = @"mqtKIxMIR4iBtBPZCmCLEb-Dz3Y";
 - (void)filtersViewController:(FiltersViewController *)filtersViewController didChangeFilters:(NSDictionary *)filters {
     // fire a new network event.
     NSLog(@"fire new network event: %@", filters);
-    [self fetchBusinessesWithQuery:@"Restaurants" params:filters];
+    [self fetchBusinessesWithQuery:self.searchTerm params:filters];
 }
 
 #pragma mark - Private methods

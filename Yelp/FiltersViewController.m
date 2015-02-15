@@ -9,7 +9,7 @@
 #import "FiltersViewController.h"
 #import "SwitchCell.h"
 
-@interface FiltersViewController () <UITableViewDataSource, UITableViewDelegate, SwitchCellDelegate, UISearchBarDelegate>
+@interface FiltersViewController () <UITableViewDataSource, UITableViewDelegate, SwitchCellDelegate>
 
 @property (nonatomic, readonly) NSDictionary *filters;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
