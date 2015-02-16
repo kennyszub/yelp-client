@@ -133,6 +133,8 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     // TODO fix CaretCells getting assigned to to switch cell
     SwitchCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SwitchCell" forIndexPath:indexPath];
+    [cell hideSwitch:NO];
+    cell.accessoryType = UITableViewCellAccessoryNone;
     switch (indexPath.section) {
         case 0:
             cell.titleLabel.text = @"Offering a Deal";
@@ -145,10 +147,11 @@
                 cell.titleLabel.text = @"Best Match";
             } else {
                 cell.titleLabel.text = self.distances[indexPath.row][@"distance"];
+                [cell hideSwitch:YES];
                 if (indexPath == self.activeDistanceCellIndexPath) {
-                    cell.on = YES;
+                    cell.accessoryType = UITableViewCellAccessoryCheckmark;
                 } else {
-                    cell.on = NO;
+                    cell.accessoryType = UITableViewCellAccessoryNone;
                 }
                 cell.delegate = self;
             }
@@ -215,6 +218,13 @@
         SwitchCell *activeCell = (SwitchCell *)[self.tableView cellForRowAtIndexPath:indexPath];
         activeCell.accessoryType = UITableViewCellAccessoryCheckmark;
         self.activeSortOptionIndexPath = indexPath;
+    // distance checkmarks
+    } else if (indexPath.section == 1 && self.distancesSectionIsExpanded && indexPath != self.activeDistanceCellIndexPath) {
+        SwitchCell *oldActiveCell = (SwitchCell *)[self.tableView cellForRowAtIndexPath:self.activeDistanceCellIndexPath];
+        oldActiveCell.accessoryType = UITableViewCellAccessoryNone;
+        SwitchCell *activeCell = (SwitchCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+        activeCell.accessoryType = UITableViewCellAccessoryCheckmark;
+        self.activeDistanceCellIndexPath = indexPath;
     }
     
 }
