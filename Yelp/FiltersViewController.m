@@ -201,15 +201,15 @@
     if (indexPath == firstDistanceIndexPath && !self.distancesSectionIsExpanded) {
         // expand distance section
         self.distancesSectionIsExpanded = YES;
-        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationNone];
     } else if (indexPath == firstSortIndexPath && !self.sortSectionIsExpanded) {
         // expand sort section
         self.sortSectionIsExpanded = YES;
-        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationNone];
     } else if (indexPath == seeMoreCategoriesIndexPath && !self.categoriesSectionIsExpanded) {
         // expand categories section
         self.categoriesSectionIsExpanded = YES;
-        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:3] withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:3] withRowAnimation:UITableViewRowAnimationNone];
     }
     
     // sort checkmarks
