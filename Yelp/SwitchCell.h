@@ -22,4 +22,6 @@
 @property (nonatomic, assign) BOOL on;
 @property (nonatomic, weak) id<SwitchCellDelegate> delegate;
 
+- (void)hideSwitch:(BOOL)hide;
+
 @end

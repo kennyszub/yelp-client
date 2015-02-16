@@ -38,6 +38,10 @@
     
 }
 
+- (void)hideSwitch:(BOOL)hide {
+    self.toggleSwitch.hidden = hide;
+}
+
 - (IBAction)switchValueChanged:(id)sender {
     [self.delegate switchCell:self didUpdateValue:self.toggleSwitch.on];
 }

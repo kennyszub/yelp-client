@@ -159,10 +159,11 @@
                 cell.titleLabel.text = @"Best Match";
             } else {
                 cell.titleLabel.text = self.sortOptions[indexPath.row][@"name"];
+                [cell hideSwitch:YES];
                 if (indexPath == self.activeSortOptionIndexPath) {
-                    cell.on = YES;
+                    cell.accessoryType = UITableViewCellAccessoryCheckmark;
                 } else {
-                    cell.on = NO;
+                    cell.accessoryType = UITableViewCellAccessoryNone;
                 }
                 cell.delegate = self;
             }
@@ -191,6 +192,8 @@
     NSIndexPath *firstDistanceIndexPath = [NSIndexPath indexPathForRow:0 inSection:1];
     NSIndexPath *firstSortIndexPath = [NSIndexPath indexPathForRow:0 inSection:2];
     NSIndexPath *seeMoreCategoriesIndexPath = [NSIndexPath indexPathForRow:4 inSection:3];
+    
+    // expand rows logic
     if (indexPath == firstDistanceIndexPath && !self.distancesSectionIsExpanded) {
         // expand distance section
         self.distancesSectionIsExpanded = YES;
@@ -204,6 +207,16 @@
         self.categoriesSectionIsExpanded = YES;
         [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:3] withRowAnimation:UITableViewRowAnimationFade];
     }
+    
+    // sort checkmarks
+    if (indexPath.section == 2 && self.sortSectionIsExpanded && indexPath != self.activeSortOptionIndexPath) {
+        SwitchCell *oldActiveCell = (SwitchCell *)[self.tableView cellForRowAtIndexPath:self.activeSortOptionIndexPath];
+        oldActiveCell.accessoryType = UITableViewCellAccessoryNone;
+        SwitchCell *activeCell = (SwitchCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+        activeCell.accessoryType = UITableViewCellAccessoryCheckmark;
+        self.activeSortOptionIndexPath = indexPath;
+    }
+    
 }
 
 
