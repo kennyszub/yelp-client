@@ -101,7 +101,7 @@
             if (self.categoriesSectionIsExpanded) {
                 rowsInSection = self.categories.count;
             } else {
-                rowsInSection = 1;
+                rowsInSection = 5;
             }
             break;
         default:
@@ -131,6 +131,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    // TODO fix CaretCells getting assigned to to switch cell
     SwitchCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SwitchCell" forIndexPath:indexPath];
     switch (indexPath.section) {
         case 0:
@@ -167,13 +168,14 @@
             }
             return cell;
         case 3:
-            if (!self.categoriesSectionIsExpanded) {
+            if (!self.categoriesSectionIsExpanded && indexPath.row == 4) {
                 cell = [tableView dequeueReusableCellWithIdentifier:@"CaretCell"];
-                cell.titleLabel.text = @"Best Match";
+                cell.titleLabel.text = @"See More";
+            } else {
+                cell.titleLabel.text = self.categories[indexPath.row][@"name"];
+                cell.on = [self.selectedCategories containsObject:self.categories[indexPath.row]];
+                cell.delegate = self;
             }
-            cell.titleLabel.text = self.categories[indexPath.row][@"name"];
-            cell.on = [self.selectedCategories containsObject:self.categories[indexPath.row]];
-            cell.delegate = self;
             return cell;
         default:
             break;
@@ -188,6 +190,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSIndexPath *firstDistanceIndexPath = [NSIndexPath indexPathForRow:0 inSection:1];
     NSIndexPath *firstSortIndexPath = [NSIndexPath indexPathForRow:0 inSection:2];
+    NSIndexPath *seeMoreCategoriesIndexPath = [NSIndexPath indexPathForRow:4 inSection:3];
     if (indexPath == firstDistanceIndexPath && !self.distancesSectionIsExpanded) {
         // expand distance section
         self.distancesSectionIsExpanded = YES;
@@ -196,6 +199,10 @@
         // expand sort section
         self.sortSectionIsExpanded = YES;
         [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationFade];
+    } else if (indexPath == seeMoreCategoriesIndexPath && !self.categoriesSectionIsExpanded) {
+        // expand categories section
+        self.categoriesSectionIsExpanded = YES;
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:3] withRowAnimation:UITableViewRowAnimationFade];
     }
 }
 
