@@ -113,6 +113,13 @@ NSString * const kYelpTokenSecret = @"mqtKIxMIR4iBtBPZCmCLEb-Dz3Y";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     BusinessCell *cell = [tableView dequeueReusableCellWithIdentifier:@"BusinessCell" forIndexPath:indexPath];
     cell.business = self.businesses[indexPath.row];
+    
+    
+    // infinite scrolling
+    if (self.businesses.count == indexPath.row + 1) {
+        NSLog(@"moar data");
+    }
+    
     return cell;
 }
 

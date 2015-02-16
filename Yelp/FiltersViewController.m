@@ -184,6 +184,7 @@
         default:
             break;
     }
+    
     return cell;
 }
 
@@ -240,20 +241,6 @@
     switch (indexPath.section) {
         case 0:
             self.offeringDeal = value;
-            break;
-        case 1:
-            if (value && indexPath != self.activeDistanceCellIndexPath) {
-                SwitchCell *oldActiveCell = (SwitchCell *)[self.tableView cellForRowAtIndexPath:self.activeDistanceCellIndexPath];
-                [oldActiveCell setOn:NO];
-                self.activeDistanceCellIndexPath = indexPath;
-            }
-            break;
-        case 2:
-            if (value && indexPath != self.activeSortOptionIndexPath) {
-                SwitchCell *oldActiveCell = (SwitchCell *)[self.tableView cellForRowAtIndexPath:self.activeSortOptionIndexPath];
-                [oldActiveCell setOn:NO];
-                self.activeSortOptionIndexPath = indexPath;
-            }
             break;
         case 3:
             if (value) {
