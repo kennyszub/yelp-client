@@ -15,6 +15,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) NSArray *categories;
 @property (nonatomic, strong) NSMutableSet *selectedCategories;
+@property (nonatomic, assign) BOOL categoriesSectionIsExpanded;
 @property (nonatomic, assign) BOOL offeringDeal;
 
 @property (nonatomic, strong) NSArray *distances;
@@ -23,6 +24,7 @@
 
 @property (nonatomic, strong) NSArray *sortOptions;
 @property (nonatomic, strong) NSIndexPath *activeSortOptionIndexPath;
+@property (nonatomic, assign) BOOL sortSectionIsExpanded;
 
 - (void) initCategories;
 
@@ -35,12 +37,14 @@
     
     if (self) {
         self.selectedCategories = [NSMutableSet set];
+        self.categoriesSectionIsExpanded = NO;
         [self initCategories];
         [self initDistances];
         [self initSortOptions];
         self.activeDistanceCellIndexPath = [NSIndexPath indexPathForRow:0 inSection:1];
         self.distancesSectionIsExpanded = NO;
         self.activeSortOptionIndexPath = [NSIndexPath indexPathForRow:0 inSection:2];
+        self.sortSectionIsExpanded = NO;
         self.offeringDeal = NO;
     }
     return self;
@@ -86,11 +90,19 @@
             break;
         case 2:
             // sort option
-            rowsInSection = self.sortOptions.count;
+            if (self.sortSectionIsExpanded) {
+                rowsInSection = self.sortOptions.count;
+            } else {
+                rowsInSection = 1;
+            }
             break;
         case 3:
             // categories
-            rowsInSection = self.categories.count;
+            if (self.categoriesSectionIsExpanded) {
+                rowsInSection = self.categories.count;
+            } else {
+                rowsInSection = 1;
+            }
             break;
         default:
             break;
@@ -129,6 +141,7 @@
         case 1:
             if (!self.distancesSectionIsExpanded) {
                 cell = [tableView dequeueReusableCellWithIdentifier:@"CaretCell"];
+                cell.titleLabel.text = @"Best Match";
             } else {
                 cell.titleLabel.text = self.distances[indexPath.row][@"distance"];
                 if (indexPath == self.activeDistanceCellIndexPath) {
@@ -140,15 +153,24 @@
             }
             return cell;
         case 2:
-            cell.titleLabel.text = self.sortOptions[indexPath.row][@"name"];
-            if (indexPath == self.activeSortOptionIndexPath) {
-                cell.on = YES;
+            if (!self.sortSectionIsExpanded) {
+                cell = [tableView dequeueReusableCellWithIdentifier:@"CaretCell"];
+                cell.titleLabel.text = @"Best Match";
             } else {
-                cell.on = NO;
+                cell.titleLabel.text = self.sortOptions[indexPath.row][@"name"];
+                if (indexPath == self.activeSortOptionIndexPath) {
+                    cell.on = YES;
+                } else {
+                    cell.on = NO;
+                }
+                cell.delegate = self;
             }
-            cell.delegate = self;
             return cell;
         case 3:
+            if (!self.categoriesSectionIsExpanded) {
+                cell = [tableView dequeueReusableCellWithIdentifier:@"CaretCell"];
+                cell.titleLabel.text = @"Best Match";
+            }
             cell.titleLabel.text = self.categories[indexPath.row][@"name"];
             cell.on = [self.selectedCategories containsObject:self.categories[indexPath.row]];
             cell.delegate = self;
@@ -164,12 +186,16 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"selecteD");
     NSIndexPath *firstDistanceIndexPath = [NSIndexPath indexPathForRow:0 inSection:1];
+    NSIndexPath *firstSortIndexPath = [NSIndexPath indexPathForRow:0 inSection:2];
     if (indexPath == firstDistanceIndexPath && !self.distancesSectionIsExpanded) {
         // expand distance section
         self.distancesSectionIsExpanded = YES;
         [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
+    } else if (indexPath == firstSortIndexPath && !self.sortSectionIsExpanded) {
+        // expand sort section
+        self.sortSectionIsExpanded = YES;
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationFade];
     }
 }
 
@@ -186,7 +212,7 @@
             self.offeringDeal = value;
             break;
         case 1:
-            if (value && indexPath != self.activeDistanceCellIndexPath && self.distancesSectionIsExpanded) {
+            if (value && indexPath != self.activeDistanceCellIndexPath) {
                 SwitchCell *oldActiveCell = (SwitchCell *)[self.tableView cellForRowAtIndexPath:self.activeDistanceCellIndexPath];
                 [oldActiveCell setOn:NO];
                 self.activeDistanceCellIndexPath = indexPath;
