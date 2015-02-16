@@ -19,6 +19,7 @@
 
 @property (nonatomic, strong) NSArray *distances;
 @property (nonatomic, strong) NSIndexPath *activeDistanceCellIndexPath;
+@property (nonatomic, assign) BOOL distancesSectionIsExpanded;
 
 @property (nonatomic, strong) NSArray *sortOptions;
 @property (nonatomic, strong) NSIndexPath *activeSortOptionIndexPath;
@@ -38,6 +39,7 @@
         [self initDistances];
         [self initSortOptions];
         self.activeDistanceCellIndexPath = [NSIndexPath indexPathForRow:0 inSection:1];
+        self.distancesSectionIsExpanded = NO;
         self.activeSortOptionIndexPath = [NSIndexPath indexPathForRow:0 inSection:2];
         self.offeringDeal = NO;
     }
@@ -54,6 +56,10 @@
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
     [self.tableView registerNib:[UINib nibWithNibName:@"SwitchCell" bundle:nil] forCellReuseIdentifier:@"SwitchCell"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"CaretCell" bundle:nil] forCellReuseIdentifier:@"CaretCell"];
+
+    // calculates row height using autolayout params (in iOS8 only)
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -72,7 +78,11 @@
             break;
         case 1:
             // distance
-            rowsInSection = self.distances.count;
+            if (self.distancesSectionIsExpanded) {
+                rowsInSection = self.distances.count;
+            } else {
+                rowsInSection = 1;
+            }
             break;
         case 2:
             // sort option
@@ -117,13 +127,17 @@
             cell.delegate = self;
             return cell;
         case 1:
-            cell.titleLabel.text = self.distances[indexPath.row][@"distance"];
-            if (indexPath == self.activeDistanceCellIndexPath) {
-                cell.on = YES;
+            if (!self.distancesSectionIsExpanded) {
+                cell = [tableView dequeueReusableCellWithIdentifier:@"CaretCell"];
             } else {
-                cell.on = NO;
+                cell.titleLabel.text = self.distances[indexPath.row][@"distance"];
+                if (indexPath == self.activeDistanceCellIndexPath) {
+                    cell.on = YES;
+                } else {
+                    cell.on = NO;
+                }
+                cell.delegate = self;
             }
-            cell.delegate = self;
             return cell;
         case 2:
             cell.titleLabel.text = self.sortOptions[indexPath.row][@"name"];
@@ -149,7 +163,20 @@
     return 4;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"selecteD");
+    NSIndexPath *firstDistanceIndexPath = [NSIndexPath indexPathForRow:0 inSection:1];
+    if (indexPath == firstDistanceIndexPath && !self.distancesSectionIsExpanded) {
+        // expand distance section
+        self.distancesSectionIsExpanded = YES;
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
+    }
+}
 
+
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return UITableViewAutomaticDimension;
+}
 
 #pragma mark Switch cell delegate methods
 - (void)switchCell:(SwitchCell *)cell didUpdateValue:(BOOL)value {
@@ -159,7 +186,7 @@
             self.offeringDeal = value;
             break;
         case 1:
-            if (value && indexPath != self.activeDistanceCellIndexPath) {
+            if (value && indexPath != self.activeDistanceCellIndexPath && self.distancesSectionIsExpanded) {
                 SwitchCell *oldActiveCell = (SwitchCell *)[self.tableView cellForRowAtIndexPath:self.activeDistanceCellIndexPath];
                 [oldActiveCell setOn:NO];
                 self.activeDistanceCellIndexPath = indexPath;
