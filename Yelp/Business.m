@@ -37,7 +37,7 @@
     }
     return self;
 }
-+ (NSArray *)businessesWithDictionaries:(NSArray *)dictionaries {
++ (NSMutableArray *)businessesWithDictionaries:(NSArray *)dictionaries {
     NSMutableArray *businesses = [NSMutableArray array];
     for (NSDictionary *dictionary in dictionaries) {
         Business *business = [[Business alloc] initWithDictionary:dictionary];
