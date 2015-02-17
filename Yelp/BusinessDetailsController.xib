@@ -29,7 +29,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YKX-Sd-sZ0" userLabel="Content View">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="364"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="485.5"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Business Name" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xO6-I5-IRT">
                                             <rect key="frame" x="8" y="20" width="262" height="21"/>
@@ -38,20 +38,20 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9uL-hr-M6E">
-                                            <rect key="frame" x="8" y="49" width="84" height="17"/>
+                                            <rect key="frame" x="8" y="48" width="84" height="17"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="84" id="SQI-Bo-NG5"/>
                                                 <constraint firstAttribute="height" constant="17" id="tFY-zV-FWD"/>
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Japanese, Thai" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vCg-3W-rgH">
-                                            <rect key="frame" x="8" y="74" width="98" height="17"/>
+                                            <rect key="frame" x="8" y="73" width="98" height="17"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="324 reviews" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cC2-oE-lBG">
-                                            <rect key="frame" x="100" y="50" width="72" height="16"/>
+                                            <rect key="frame" x="100" y="49" width="72" height="16"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
@@ -62,27 +62,27 @@
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sample Review" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9yp-kO-oVf">
-                                            <rect key="frame" x="15" y="302" width="108" height="18"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Review Snippet" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9yp-kO-oVf">
+                                            <rect key="frame" x="15" y="423" width="110" height="18"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="u0e-Pa-uHf">
-                                            <rect key="frame" x="15" y="107" width="290" height="168"/>
+                                            <rect key="frame" x="15" y="106" width="290" height="290"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="290" id="Huy-po-wUW"/>
-                                                <constraint firstAttribute="height" constant="168" id="x08-H7-Q8j"/>
+                                                <constraint firstAttribute="height" constant="290" id="x08-H7-Q8j"/>
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="17 mi" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1ig-Vh-l7R">
-                                            <rect key="frame" x="279" y="24" width="34" height="16"/>
+                                            <rect key="frame" x="278" y="24" width="34" height="16"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Hands down best sushi blah blah" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mr0-qe-m80">
-                                            <rect key="frame" x="15" y="336" width="290" height="18"/>
+                                            <rect key="frame" x="15" y="457" width="290" height="18"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
