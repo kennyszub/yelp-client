@@ -109,6 +109,7 @@ NSString * const kYelpTokenSecret = @"mqtKIxMIR4iBtBPZCmCLEb-Dz3Y";
 
 - (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
     [self.tableView removeGestureRecognizer:self.screenTapRecognizer];
+    self.searchBar.showsCancelButton = NO;
     // remove clear button
     UITextField *textField = [self.searchBar valueForKey:@"_searchField"];
     textField.clearButtonMode = UITextFieldViewModeNever;
