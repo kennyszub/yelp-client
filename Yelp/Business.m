@@ -34,6 +34,7 @@
         self.ratingImageUrl = dictionary[@"rating_img_url"];
         float milesPerMeter = 0.000621371;
         self.distance = [dictionary[@"distance"] integerValue] * milesPerMeter;
+        self.sampleReview = dictionary[@"snippet_text"];
     }
     return self;
 }

@@ -12,6 +12,7 @@
 #import "BusinessCell.h"
 #import "FiltersViewController.h"
 #import "UIScrollView+SVInfiniteScrolling.h"
+#import "BusinessDetailsController.h"
 
 NSString * const kYelpConsumerKey = @"vxKwwcR_NMQ7WaEiQBK_CA";
 NSString * const kYelpConsumerSecret = @"33QCvh5bIF5jIHR5klQr7RtBDhQ";
@@ -143,6 +144,13 @@ NSString * const kYelpTokenSecret = @"mqtKIxMIR4iBtBPZCmCLEb-Dz3Y";
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return UITableViewAutomaticDimension;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    BusinessDetailsController *bc = [[BusinessDetailsController alloc] init];
+    bc.business = self.businesses[indexPath.row];
+    [self.navigationController pushViewController:bc animated:YES];
 }
 
 
