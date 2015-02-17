@@ -37,6 +37,7 @@ Time spent: `15`
 
 - make distance and sort lists collapse upon click
 - missing address label on restaurant details page
+
 ---
 
 
