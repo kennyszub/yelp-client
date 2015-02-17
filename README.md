@@ -21,8 +21,8 @@ Time spent: `10`
 
 #### Optional
 
-- [ ] Search results page
-   - [ ] Infinite scroll for restaurant results
+- [x] Search results page
+   - [x] Infinite scroll for restaurant results
    - [ ] Implement map view of restaurant results
 - [x] Filter page
    - [x] Radius filter should expand as in the real Yelp app
